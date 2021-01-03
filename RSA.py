@@ -1,12 +1,23 @@
 from Cryptodome.Util import number
+from Database import enc_table
+
 
 # p = number.getPrime(512)
 # q = number.getPrime(512)
-p = 61
-q = 53
-e = 65537  # usually a large prime number, or calculated using gcd(e,phi(pq))=1
+# p = 61
+# q = 53
+# e = 65537  # usually a large prime number, or calculated using gcd(e,phi(pq))=1
 
-n = p * q
+def retrieve_from_db():
+    doc_pass = enc_table.find_one({'_id': 1})
+    p = doc_pass["p"]
+    q = doc_pass["q"]
+    e = doc_pass["e"]
+    n = p * q
+    return p, q, n, e
+
+
+p, q, n, e = retrieve_from_db()
 
 
 def calculate_phi():
@@ -41,13 +52,12 @@ def decrypt(cripttext):  # using TCR (faster than normal decryption)
 
     return TCR(cripttext, d)
 
-
 # def decrypt(cripttext):
 #     return (cripttext ** generate_private_key()) % n
 
 
-text = 123
-ct = crypt(text)
-print(ct)
-dt = decrypt(ct)
-print(dt)
+# text = 123
+# ct = crypt(text)
+# print(ct)
+# dt = decrypt(ct)
+# print(dt)

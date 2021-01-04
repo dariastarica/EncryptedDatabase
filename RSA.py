@@ -31,7 +31,6 @@ def generate_private_key():
 
 
 def crypt(plaintext):
-    print("plaintetx: ", plaintext)
     plaintext = int(plaintext)
     return (plaintext ** e) % n
 
@@ -63,3 +62,14 @@ def decrypt(cripttext):  # using TCR (faster than normal decryption)
 # print(ct)
 # dt = decrypt(ct)
 # print(dt)
+
+def is_e_ok(e):
+    def gcd(a, b):
+        if b == 0:
+            return a
+        else:
+            return gcd(b, a % b)
+    if gcd(e, calculate_phi()) == 1:
+        return True
+    else:
+        return False

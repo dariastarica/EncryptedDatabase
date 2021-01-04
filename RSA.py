@@ -31,6 +31,8 @@ def generate_private_key():
 
 
 def crypt(plaintext):
+    print("plaintetx: ", plaintext)
+    plaintext = int(plaintext)
     return (plaintext ** e) % n
 
 
@@ -56,7 +58,7 @@ def decrypt(cripttext):  # using TCR (faster than normal decryption)
 #     return (cripttext ** generate_private_key()) % n
 
 
-# text = 123
+# text = "123"
 # ct = crypt(text)
 # print(ct)
 # dt = decrypt(ct)

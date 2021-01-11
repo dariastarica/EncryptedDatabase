@@ -65,29 +65,3 @@ def decrypt(cripttext_list):  # using TCR (faster than normal decryption)
 
 # def decrypt(cripttext):
 #     return (cripttext ** generate_private_key()) % n
-
-
-# path = "C:\\Users\\Daria\\Desktop\\test.txt"
-# file = open(path, "rb")
-# content = file.read()
-# print(content)
-# ct = crypt(content)
-# # print("ENC")
-# # print(ct)
-# dt = decrypt(ct)
-# print(dt)
-# print_file = open(path, "wb")
-# print_file.write(dt)
-
-
-def is_e_ok(e):
-    def gcd(a, b):
-        if b == 0:
-            return a
-        else:
-            return gcd(b, a % b)
-
-    if gcd(e, calculate_phi()) == 1:
-        return True
-    else:
-        return False

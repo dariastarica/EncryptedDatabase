@@ -1,12 +1,12 @@
-from Cryptodome.Util import number
 from Database import enc_table
-
 
 # p = number.getPrime(512)
 # q = number.getPrime(512)
-# p = 61
+# p = 59
 # q = 53
 # e = 65537  # usually a large prime number, or calculated using gcd(e,phi(pq))=1
+# n=p*q
+
 
 def retrieve_from_db():
     doc_pass = enc_table.find_one({'_id': 1})
@@ -31,14 +31,19 @@ def generate_private_key():
 
 
 def crypt(plaintext):
-    plaintext = int(plaintext)
-    return (plaintext ** e) % n
+
+    plaintext = plaintext.decode("iso-8859-1")
+    # print(plaintext)
+    ch_list = [ord(b) for b in plaintext]
+    # print(ch_list)
+    enc_list = [(ch ** e) % n for ch in ch_list]
+    print(enc_list)
+    # print(enc_list)
+    return enc_list
 
 
-def decrypt(cripttext):  # using TCR (faster than normal decryption)
+def decrypt(cripttext_list):  # using TCR (faster than normal decryption)
     d = generate_private_key()
-
-    # print("d: ", d)
 
     def TCR(a, n):
         m1 = p
@@ -50,18 +55,30 @@ def decrypt(cripttext):  # using TCR (faster than normal decryption)
         x1 = ((a % m1) ** n1) % m1
         x2 = ((a % m2) ** n2) % m2
         return x1 + m1 * (((x2 - x1) * m1_mod_inverse) % m2)
+    txt_list = [chr(TCR(cripttext_list[i], d)) for i in range(len(cripttext_list))]
 
-    return TCR(cripttext, d)
+    plaintext = ""
+    for ch in txt_list:
+        plaintext = plaintext + ch
+    return plaintext.encode("iso-8859-1")
+
 
 # def decrypt(cripttext):
 #     return (cripttext ** generate_private_key()) % n
 
 
-# text = "123"
-# ct = crypt(text)
-# print(ct)
+# path = "C:\\Users\\Daria\\Desktop\\test.txt"
+# file = open(path, "rb")
+# content = file.read()
+# print(content)
+# ct = crypt(content)
+# # print("ENC")
+# # print(ct)
 # dt = decrypt(ct)
 # print(dt)
+# print_file = open(path, "wb")
+# print_file.write(dt)
+
 
 def is_e_ok(e):
     def gcd(a, b):
@@ -69,6 +86,7 @@ def is_e_ok(e):
             return a
         else:
             return gcd(b, a % b)
+
     if gcd(e, calculate_phi()) == 1:
         return True
     else:

@@ -1,5 +1,6 @@
 from Database import metadata_table
-from RSA import crypt, decrypt, is_e_ok
+from RSA import crypt, decrypt
+
 import os
 
 
@@ -19,8 +20,10 @@ def menu():
         file_name = split_command[1]
         try:
             file_path = base_path+file_name
-            file = open(file_path, "r")
+            file = open(file_path, "rb")
             content = file.read()
+            print(content)
+            # print(content, type(content))
         except Exception as e:
             print(e)
         else:
@@ -48,7 +51,11 @@ def menu():
                 enc_content_cursor = metadata_table.find({"Name": file_name})
                 for enc_content in enc_content_cursor:
                     print("enc: ", enc_content)
-                    print(decrypt(enc_content["Content"]))
+                    dc = decrypt(enc_content["Content"])
+                    print(dc)
+                    print_file = open(file_path, "wb")
+                    print_file.write(dc)
+                    print_file.close()
 
 
 while 1:

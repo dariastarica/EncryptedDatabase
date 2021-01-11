@@ -5,6 +5,10 @@ import os
 
 
 def menu():
+    """
+    Prints the available actions in the console
+    :return: None
+    """
     print(">1. Add document in database")
     print(">2. Delete document from database")
     print(">3. Read document from database")
@@ -12,12 +16,17 @@ def menu():
 
 
 def parse_command():
+    """
+    This function parses the input from the user and extracts the information that is needed further
+    Throws an error if the file cannot be opened or read
+    :return: a tuple that consists in the requested action (add/delete/read from Database), the content of the file,
+    the path, and the file name
+    """
     base_path = "C:\\Users\\Daria\\Desktop\\"
     print("The file path is: ", base_path)
     data_input = input("Type in command:\n")
     split_command = data_input.split(" ")
-    print(split_command)
-    while len(split_command) != 2:
+    if len(split_command) != 2:
         print("Invalid command! Please type add|delete|read <file_name>")
         data_input = input("Type in command:\n")
         split_command = data_input.split(" ")
@@ -35,6 +44,13 @@ def parse_command():
 
 
 def add(file_name, content, file_path):
+    """
+    Adds file information in the Database
+    :param file_name: The name of the file
+    :param content: The content of the file, encrypted
+    :param file_path: The path
+    :return: None
+    """
     metadata_table.insert_one({
         # "_id": metadata_table.count_documents()+1,
         "Name": file_name,
@@ -50,11 +66,23 @@ def add(file_name, content, file_path):
 
 
 def delete(file_name):
+    """
+    Deletes a file from the Database
+    :param file_name: The file name
+    :return: None
+    """
     metadata_table.delete_many({"Name": file_name})
     print("File ", file_name, " deleted!")
 
 
 def read(file_name, file_path):
+    """
+    Prints in console the decrypted content and/or creates a file in which the decrypted content can be found.
+    Throws an exception if the output file cannot be opens or if it cannot be written in
+    :param file_name: The file name
+    :param file_path: The file path
+    :return: None
+    """
     enc_content_cursor = metadata_table.find({"Name": file_name})
     for enc_content in enc_content_cursor:
         print("enc: ", enc_content)
@@ -63,9 +91,11 @@ def read(file_name, file_path):
         if ext == ".txt":
             print(dc.decode("utf-8"))
         else:
-            print("Check ", file_path, " for the decoded content! ")
+            print("Check the file \"result\" for the decoded content! ")
         try:
-            print_file = open(file_path, "wb")
+            path = "C:\\Users\\Daria\\Desktop\\"
+            result = "result" + ext
+            print_file = open(path+result, "wb")
             print_file.write(dc)
             print_file.close()
         except Exception as e:
@@ -73,6 +103,10 @@ def read(file_name, file_path):
 
 
 def main_fct():
+    """
+    The main program that combines all the functions written previously
+    :return: None
+    """
     menu()
     command, content, file_path, file_name = parse_command()
     if command == 'add':

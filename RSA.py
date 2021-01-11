@@ -9,6 +9,10 @@ from Database import enc_table
 
 
 def retrieve_from_db():
+    """
+    Retrieves the public key and the prime numbers needed for the encryption
+    :return: a tuple, that consists in the two primes,the product and the public key
+    """
     doc_pass = enc_table.find_one({'_id': 1})
     p = doc_pass["p"]
     q = doc_pass["q"]
@@ -25,12 +29,22 @@ def calculate_phi():
 
 
 def generate_private_key():
+    """
+    Generates the private key, based on the public key
+    :return: The private key
+    """
     phi = calculate_phi()
     # print("phi: ", phi)
     return pow(e, -1, phi)
 
 
 def crypt(plaintext):
+    """
+    The encryption function, that first transforms the input in a list of integers and then encrypts every element of
+    the list
+    :param plaintext: The bytes to encrypt
+    :return: The encrypted list
+    """
 
     plaintext = plaintext.decode("iso-8859-1")
     # print(plaintext)
@@ -43,6 +57,12 @@ def crypt(plaintext):
 
 
 def decrypt(cripttext_list):  # using TCR (faster than normal decryption)
+    """
+    The decryption function that uses the Chinese Remainder Theorem to decrypt the list, and then transforms the list
+    back into the decrypted string
+    :param cripttext_list: A list that contains encrypted elements
+    :return: The decrypted string, encoded in bytes
+    """
     d = generate_private_key()
 
     def TCR(a, n):
@@ -64,4 +84,7 @@ def decrypt(cripttext_list):  # using TCR (faster than normal decryption)
 
 
 # def decrypt(cripttext):
+#     """
+#         An alternative decryption function
+#     """
 #     return (cripttext ** generate_private_key()) % n

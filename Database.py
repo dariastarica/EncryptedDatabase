@@ -1,7 +1,6 @@
 import pymongo
 
-client = pymongo.MongoClient("mongodb+srv://admin:dbAdmin@cluster0.wvxuf.mongodb.net/<dbname>?retryWrites=true&w"
-                             "=majority")
+client = pymongo.MongoClient("mongoURI")
 db = client['EncDB']
 
 metadata_table = db["Metadata"]

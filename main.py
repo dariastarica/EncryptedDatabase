@@ -29,8 +29,8 @@ def parse_command():
     if len(split_command) != 2:
         print("Invalid command! Please type add|delete|read <file_name>")
         data_input = input("Type in command:\n")
-        split_command = data_input.split(" ")
     else:
+        split_command = data_input.split(" ")
         command = split_command[0]
         file_name = split_command[1]
         try:

@@ -51,7 +51,7 @@ def crypt(plaintext):
     ch_list = [ord(b) for b in plaintext]
     # print(ch_list)
     enc_list = [(ch ** e) % n for ch in ch_list]
-    print(enc_list)
+    # print(enc_list)
     # print(enc_list)
     return enc_list
 
